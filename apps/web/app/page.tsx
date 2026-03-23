@@ -12,8 +12,8 @@ const ThemeImage = (props: Props) => {
 
   return (
     <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
+      <Image {...rest} src={srcLight} className="imgLight" priority />
+      <Image {...rest} src={srcDark} className="imgDark" priority />
     </>
   );
 };
@@ -29,7 +29,6 @@ export default function Home() {
           alt="Turborepo logo"
           width={180}
           height={38}
-          priority
         />
         <ol>
           <li>
