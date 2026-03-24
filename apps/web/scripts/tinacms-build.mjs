@@ -5,6 +5,17 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const webRoot = join(__dirname, "..");
 
+/** Must stay in sync with `branch` in apps/web/tina/config.ts */
+function resolveTinaBranch() {
+  return (
+    process.env.TINA_BRANCH?.trim() ||
+    process.env.GITHUB_BRANCH ||
+    process.env.VERCEL_GIT_COMMIT_REF ||
+    process.env.HEAD ||
+    "main"
+  );
+}
+
 const hasTinaCloud =
   Boolean(process.env.NEXT_PUBLIC_TINA_CLIENT_ID?.trim()) &&
   Boolean(process.env.TINA_TOKEN?.trim());
@@ -31,6 +42,16 @@ const args = hasTinaCloud
   ? ["tinacms", "build"]
   : ["tinacms", "build", "--local", "--skip-cloud-checks"];
 
+if (hasTinaCloud) {
+  const branch = resolveTinaBranch();
+  console.log(
+    `[Tina] Tina Cloud branch: "${branch}" (from TINA_BRANCH / GITHUB_BRANCH / VERCEL_GIT_COMMIT_REF / HEAD, else main).`
+  );
+  console.log(
+    `[Tina] If builds fail with "branch is not on Tina Cloud", index that branch in https://app.tina.io/ (Project → Configuration → Branches) or set TINA_BRANCH in Vercel to a branch that is already indexed.\n`
+  );
+}
+
 const result = spawnSync("npx", args, {
   cwd: webRoot,
   stdio: "inherit",
@@ -46,11 +67,13 @@ if (!hasTinaCloud && !onVercel) {
 
 const code = result.status === null ? 1 : result.status;
 if (code !== 0 && hasTinaCloud) {
-  const ref = process.env.VERCEL_GIT_COMMIT_REF || process.env.HEAD || "main";
+  const ref = resolveTinaBranch();
   console.error(`
-[Tina] If the log mentions a branch not being on Tina Cloud:
-  • In https://app.tina.io/ open your project → Configuration, and ensure the GitHub repo matches this site’s repo and branch "${ref}" is indexed (or add it).
-  • Confirm apps/web/tina/config.ts and tina/tina-lock.json are pushed to that branch.
+[Tina] tinacms build failed. If you see "branch is not on Tina Cloud" for "${ref}":
+  • In https://app.tina.io/ → your project → Configuration: the connected GitHub repo must be the same repo Vercel builds (same org/name).
+  • Under Branches, add or wait for indexing to finish for "${ref}" (or rename your default branch to match what Tina indexes).
+  • Alternatively set env TINA_BRANCH in Vercel to an indexed branch name (e.g. if only "master" is indexed).
+  • Ensure apps/web/tina/config.ts and apps/web/tina/tina-lock.json are committed on that branch.
 
 https://tina.io/docs/tinacloud/troubleshooting#3-how-do-i-resolve-errors-caused-by-unindexed-branches
 `);
