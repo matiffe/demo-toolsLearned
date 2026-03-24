@@ -8,32 +8,16 @@
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "generate:component": "turbo gen react-component",
-    "check-types": "tsc --noEmit",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "chromatic": "npx chromatic --project-token=chpt_c126051e99ff7e5"
+    "check-types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^5.0.2",
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
-    "@storybook/addon-a11y": "^10.3.3",
-    "@storybook/addon-docs": "^10.3.3",
-    "@storybook/addon-onboarding": "^10.3.3",
-    "@storybook/addon-vitest": "^10.3.3",
-    "@storybook/react-vite": "^10.3.3",
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
-    "@vitest/browser-playwright": "^4.1.0",
-    "@vitest/coverage-v8": "^4.1.0",
-    "chromatic": "^13.3.5",
     "eslint": "^9.39.1",
-    "eslint-plugin-storybook": "^10.3.3",
-    "playwright": "^1.58.2",
-    "storybook": "^10.3.3",
-    "typescript": "5.9.2",
-    "vitest": "^4.1.0"
+    "typescript": "5.9.2"
   },
   "dependencies": {
     "react": "^19.2.0",
