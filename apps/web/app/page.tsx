@@ -1,4 +1,3 @@
-import Image, { type ImageProps } from "next/image";
 import { PromoBanner } from "@repo/ui/PromoBanner";
 import styles from "./page.module.css";
 
