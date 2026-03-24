@@ -72,13 +72,13 @@ const code = result.status === null ? 1 : result.status;
 if (code !== 0 && hasTinaCloud) {
   const ref = resolveTinaBranch();
   console.error(`
-[Tina] tinacms build failed. Client ID + token are not enough — Tina Cloud must be fully configured.
+[Tina] tinacms exited with an error — scroll up for the first Tina CLI "ERROR" (this block is only a checklist).
 
 If you see "branch is not on Tina Cloud" for "${ref}":
-  • https://app.tina.io/ → your project → Configuration → Advanced Settings → "Path To Tina": set to apps/web (this repo is a monorepo; Tina must find tina/ there).
-  • Configuration: GitHub repo must match the repo Vercel deploys (Change Repository if needed).
-  • Branches: add "${ref}" and wait until indexing shows complete (or set TINA_BRANCH in Vercel to a branch Tina already indexes).
-  • Site URL(s): add your Vercel production URL and a preview pattern (e.g. https://*.vercel.app) so the editor is allowed.
+  • Configuration → Advanced Settings → "Path To Tina": apps/web (monorepo).
+  • GitHub repo must match the repo Vercel deploys.
+  • Branches: "${ref}" indexed and finished (or set TINA_BRANCH in Vercel). To force reindex: tiny edit to apps/web/tina/tina-lock.json on that branch, push, wait a few minutes.
+  • Site URL(s) (localhost-only is fine for builds; needed for CMS login on production): add https://your-domain and https://*.vercel.app.
 
 https://tina.io/docs/tinacloud/dashboard/projects#path-to-tina
 https://tina.io/docs/tinacloud/troubleshooting#3-how-do-i-resolve-errors-caused-by-unindexed-branches

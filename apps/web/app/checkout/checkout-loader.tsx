@@ -2,10 +2,6 @@
 
 import dynamic from "next/dynamic";
 
-/**
- * `dynamic(..., { ssr: false })` must live in a Client Component (Next.js 16+).
- * RecurlyProvider also requires the browser (window.recurly).
- */
 const CheckoutClient = dynamic(() => import("./checkout-client"), {
   ssr: false,
   loading: () => (

@@ -28,7 +28,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable}`}
         suppressHydrationWarning
       >
-        {/* Required by @recurly/react-recurly before RecurlyProvider mounts (window.recurly). */}
         <Script
           src="https://js.recurly.com/v4/recurly.js"
           strategy="beforeInteractive"

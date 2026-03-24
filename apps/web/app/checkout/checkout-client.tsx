@@ -8,7 +8,20 @@ import {
 } from "@recurly/react-recurly";
 import { useRef, useState } from "react";
 
-const recurlyPublicKey = process.env.NEXT_PUBLIC_RECURLY_PUBLIC_KEY ?? "provisionally-set-public-key";
+const recurlyPublicKey =
+  process.env.NEXT_PUBLIC_RECURLY_PUBLIC_KEY ?? "ewr1-your-public-test-key";
+
+const cardStyle = {
+  fontSize: "16px",
+  fontColor: "#0f172a",
+  fontFamily: "system-ui, -apple-system, sans-serif",
+  placeholder: {
+    color: "#94a3b8",
+  },
+  invalid: {
+    fontColor: "#ef4444",
+  },
+};
 
 function CheckoutForm() {
   const recurly = useRecurly();
@@ -27,92 +40,112 @@ function CheckoutForm() {
     recurly.token(form, (error, token) => {
       setLoading(false);
       if (error) {
-        setMessage(error.message ?? "Could not tokenize payment details.");
+        setMessage(
+          `❌ ${error.message ?? "Could not tokenize payment details."}`,
+        );
         return;
       }
       if (token?.id) {
         console.log("Token ready for the backend:", token.id);
-        setMessage(
-          "Payment method tokenized successfully. Send this token to your server from a secure API route.",
-        );
+        setMessage(`✅ Success! Secure Token: ${token.id.substring(0, 12)}...`);
       }
     });
   };
 
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      className="max-w-md mx-auto mt-20 p-8 border rounded-xl shadow-lg bg-white"
-    >
-      <h2 className="text-2xl font-bold mb-6 text-center">
-        Subscribe to Pro ($15/mo) testing
-      </h2>
-
-      <div className="grid gap-4 mb-4">
-        <label className="block text-sm font-medium text-gray-700">
-          First name
-          <input
-            type="text"
-            data-recurly="first_name"
-            name="first_name"
-            autoComplete="given-name"
-            required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900"
-            placeholder="Jane"
-          />
-        </label>
-        <label className="block text-sm font-medium text-gray-700">
-          Last name
-          <input
-            type="text"
-            data-recurly="last_name"
-            name="last_name"
-            autoComplete="family-name"
-            required
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900"
-            placeholder="Doe"
-          />
-        </label>
-      </div>
-
-      <div className="mb-6 p-3 border rounded-md bg-gray-50 min-h-11">
-        <CardElement />
-      </div>
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition disabled:opacity-60"
+    <div className="flex flex-col items-center justify-center w-full mt-10">
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        className="w-full max-w-lg bg-white p-10 rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100"
       >
-        {loading ? "Processing..." : "Submit Payment"}
-      </button>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Checkout Seguro
+          </h2>
+          <p className="mt-2 text-slate-500 font-medium">
+            Suscripción Pro -{" "}
+            <span className="text-blue-600 font-bold">$15/mo</span>
+          </p>
+        </div>
 
-      {message ? (
-        <p className="mt-4 text-center font-medium text-gray-700">{message}</p>
-      ) : null}
-    </form>
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <label className="block">
+            <span className="text-sm font-semibold text-slate-700">
+              First name
+            </span>
+            <input
+              type="text"
+              data-recurly="first_name"
+              name="first_name"
+              autoComplete="given-name"
+              required
+              className="mt-1.5 w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition outline-none"
+              placeholder="Jane"
+            />
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold text-slate-700">
+              Last name
+            </span>
+            <input
+              type="text"
+              data-recurly="last_name"
+              name="last_name"
+              autoComplete="family-name"
+              required
+              className="mt-1.5 w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition outline-none"
+              placeholder="Doe"
+            />
+          </label>
+        </div>
+
+        <div className="mb-8">
+          <span className="text-sm font-semibold text-slate-700 mb-1.5 block">
+            Card details
+          </span>
+          <div className="p-4 border border-slate-300 rounded-xl bg-slate-50 shadow-inner focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition min-h-[52px]">
+            <CardElement style={cardStyle} />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 text-white font-bold py-4 px-4 rounded-xl hover:bg-blue-700 active:transform active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed shadow-md shadow-blue-200"
+        >
+          {loading ? "Processing Secure Payment..." : "Submit Payment"}
+        </button>
+
+        {message ? (
+          <div
+            className={`mt-6 p-4 rounded-xl text-center font-medium border ${message.includes("❌") ? "bg-red-50 text-red-700 border-red-200" : "bg-emerald-50 text-emerald-700 border-emerald-200"}`}
+          >
+            {message}
+          </div>
+        ) : null}
+      </form>
+    </div>
   );
 }
 
 export default function CheckoutClient() {
   if (!recurlyPublicKey) {
     return (
-      <div className="min-h-screen bg-gray-100 p-4 flex items-center justify-center">
-        <p className="text-center text-gray-800 max-w-md">
+      <div className="min-h-screen bg-slate-50 p-4 flex items-center justify-center">
+        <p className="text-center text-slate-800 max-w-md bg-white p-6 rounded-xl shadow-sm border border-slate-200">
           Set{" "}
-          <code className="rounded bg-gray-200 px-1 py-0.5">
+          <code className="rounded bg-slate-100 text-pink-600 px-1.5 py-0.5 font-mono text-sm">
             NEXT_PUBLIC_RECURLY_PUBLIC_KEY
           </code>{" "}
-          in <code className="rounded bg-gray-200 px-1 py-0.5">.env.local</code>{" "}
-          (your Recurly public API key from the dashboard).
+          in your environment.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
       <RecurlyProvider publicKey={recurlyPublicKey}>
         <Elements>
           <CheckoutForm />
