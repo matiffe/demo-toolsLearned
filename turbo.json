@@ -5,7 +5,13 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": [
+        "TINA_TOKEN",
+        "NEXT_PUBLIC_TINA_CLIENT_ID",
+        "VERCEL",
+        "VERCEL_GIT_COMMIT_REF"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]
