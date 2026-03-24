@@ -44,4 +44,16 @@ if (!hasTinaCloud && !onVercel) {
   );
 }
 
-process.exit(result.status === null ? 1 : result.status);
+const code = result.status === null ? 1 : result.status;
+if (code !== 0 && hasTinaCloud) {
+  const ref = process.env.VERCEL_GIT_COMMIT_REF || process.env.HEAD || "main";
+  console.error(`
+[Tina] If the log mentions a branch not being on Tina Cloud:
+  • In https://app.tina.io/ open your project → Configuration, and ensure the GitHub repo matches this site’s repo and branch "${ref}" is indexed (or add it).
+  • Confirm apps/web/tina/config.ts and tina/tina-lock.json are pushed to that branch.
+
+https://tina.io/docs/tinacloud/troubleshooting#3-how-do-i-resolve-errors-caused-by-unindexed-branches
+`);
+}
+
+process.exit(code);

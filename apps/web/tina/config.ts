@@ -1,7 +1,9 @@
 import { defineConfig, type Config } from "tinacms";
 
-// Your hosting provider likely exposes this as an environment variable
+// Must match a branch indexed in Tina Cloud for the linked GitHub repo.
+// Optional override: TINA_BRANCH or GITHUB_BRANCH (e.g. CI). Vercel sets VERCEL_GIT_COMMIT_REF.
 const branch =
+  process.env.TINA_BRANCH?.trim() ||
   process.env.GITHUB_BRANCH ||
   process.env.VERCEL_GIT_COMMIT_REF ||
   process.env.HEAD ||
