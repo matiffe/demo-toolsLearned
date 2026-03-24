@@ -48,7 +48,10 @@ if (hasTinaCloud) {
     `[Tina] Tina Cloud branch: "${branch}" (from TINA_BRANCH / GITHUB_BRANCH / VERCEL_GIT_COMMIT_REF / HEAD, else main).`
   );
   console.log(
-    `[Tina] If builds fail with "branch is not on Tina Cloud", index that branch in https://app.tina.io/ (Project → Configuration → Branches) or set TINA_BRANCH in Vercel to a branch that is already indexed.\n`
+    `[Tina] Monorepo: in Tina → Project → Configuration → Advanced Settings, "Path To Tina" must be apps/web (where this app’s tina/ folder lives).`
+  );
+  console.log(
+    `[Tina] If builds fail with "branch is not on Tina Cloud", finish setup at https://app.tina.io/ (same GitHub repo as Vercel, branch indexed) or set TINA_BRANCH to an indexed branch.\n`
   );
 }
 
@@ -69,12 +72,15 @@ const code = result.status === null ? 1 : result.status;
 if (code !== 0 && hasTinaCloud) {
   const ref = resolveTinaBranch();
   console.error(`
-[Tina] tinacms build failed. If you see "branch is not on Tina Cloud" for "${ref}":
-  • In https://app.tina.io/ → your project → Configuration: the connected GitHub repo must be the same repo Vercel builds (same org/name).
-  • Under Branches, add or wait for indexing to finish for "${ref}" (or rename your default branch to match what Tina indexes).
-  • Alternatively set env TINA_BRANCH in Vercel to an indexed branch name (e.g. if only "master" is indexed).
-  • Ensure apps/web/tina/config.ts and apps/web/tina/tina-lock.json are committed on that branch.
+[Tina] tinacms build failed. Client ID + token are not enough — Tina Cloud must be fully configured.
 
+If you see "branch is not on Tina Cloud" for "${ref}":
+  • https://app.tina.io/ → your project → Configuration → Advanced Settings → "Path To Tina": set to apps/web (this repo is a monorepo; Tina must find tina/ there).
+  • Configuration: GitHub repo must match the repo Vercel deploys (Change Repository if needed).
+  • Branches: add "${ref}" and wait until indexing shows complete (or set TINA_BRANCH in Vercel to a branch Tina already indexes).
+  • Site URL(s): add your Vercel production URL and a preview pattern (e.g. https://*.vercel.app) so the editor is allowed.
+
+https://tina.io/docs/tinacloud/dashboard/projects#path-to-tina
 https://tina.io/docs/tinacloud/troubleshooting#3-how-do-i-resolve-errors-caused-by-unindexed-branches
 `);
 }

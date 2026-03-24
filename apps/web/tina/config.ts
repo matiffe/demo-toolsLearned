@@ -1,5 +1,9 @@
 import { defineConfig, type Config } from "tinacms";
 
+// Tina Cloud (app.tina.io) must use the same GitHub repo as Vercel. Tokens alone are not enough:
+// connect the repo, index your deploy branch (e.g. main), and under Configuration → Advanced Settings
+// set "Path To Tina" to `apps/web` (this monorepo’s `tina/` folder is not at the repository root).
+
 // Must match a branch indexed in Tina Cloud for the linked GitHub repo.
 // Optional override: TINA_BRANCH or GITHUB_BRANCH (e.g. CI). Vercel sets VERCEL_GIT_COMMIT_REF.
 const branch =
