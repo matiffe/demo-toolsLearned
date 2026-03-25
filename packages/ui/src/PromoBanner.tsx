@@ -10,16 +10,16 @@ export const PromoBanner = ({
   textColor,
 }: PromoBannerProps) => {
   return (
-    <div
-      className={`p-4 ${bgColor} text-white items-center text-center rounded-lg mb-4 flex flex-col w-dvh h-44 justify-evenly mt-10`}
-    >
-      <h2 className={`text-2xl ${textColor}`}>{headline}</h2>
-      <a
-        href="/checkout"
-        className="flex px-4 py-2 w-40 h-10 hover:scale-105 items-center justify-center bg-black text-sm font-bold rounded-md text-white"
-      >
-        Go to Checkout
-      </a>
+    <div className={`w-full overflow-hidden rounded-lg text-white ${bgColor}`}>
+      <div className="flex min-h-28 w-full flex-col items-center justify-evenly p-4 text-center gap-4">
+        <h2 className={`text-2xl ${textColor ?? ""}`}>{headline}</h2>
+        <a
+          href="/checkout"
+          className="flex h-10 w-40 items-center justify-center rounded-md bg-black px-4 py-2 text-sm font-bold text-white hover:scale-105"
+        >
+          Go to Checkout
+        </a>
+      </div>
     </div>
   );
 };

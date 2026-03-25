@@ -1,0 +1,4 @@
+@import "tailwindcss";
+
+/* Scan UI package components so utility classes used in stories are generated */
+@source "../src/**/*.tsx";
