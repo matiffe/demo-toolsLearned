@@ -13,6 +13,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Generate Tina client
+        run: npx tinacms build --local --skip-cloud-checks
+        working-directory: apps/web
+
       - name: Publish to Chromatic
         uses: chromaui/action@latest
         with:

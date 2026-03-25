@@ -1,5 +1,5 @@
 import { CardElement, useRecurly } from "@recurly/react-recurly";
-import { useRef, useState } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { CheckoutPlan } from "./types";
 
 export default function CheckoutForm({ plan }: { plan: CheckoutPlan }) {
@@ -8,7 +8,7 @@ export default function CheckoutForm({ plan }: { plan: CheckoutPlan }) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = formRef.current;
     if (!form) return;

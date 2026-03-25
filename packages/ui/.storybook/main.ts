@@ -20,6 +20,13 @@ const config: StorybookConfig = {
     "../src/**/*.mdx",
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
+  // @recurly/react-recurly's RecurlyProvider throws if window.recurly is missing.
+  // The Next app loads these in apps/web/app/checkout/layout.tsx; Storybook must too.
+  previewHead: (head) => `
+    ${head}
+    <link rel="stylesheet" href="https://js.recurly.com/v4/recurly.css" />
+    <script src="https://js.recurly.com/v4/recurly.js"></script>
+  `,
   "addons": [
     getAbsolutePath('@chromatic-com/storybook'),
     getAbsolutePath('@storybook/addon-vitest'),
@@ -29,6 +36,10 @@ const config: StorybookConfig = {
   framework: getAbsolutePath("@storybook/react-vite"),
   async viteFinal(config) {
     return mergeConfig(config, {
+      // Next.js app code uses `jsx: "preserve"`; when Storybook bundles `apps/web`
+      // from outside the UI package, esbuild can emit `React.createElement` without
+      // a `React` import, causing "React is not defined" in Chromatic.
+      esbuild: { jsx: "automatic" },
       plugins: [tailwindcss()],
       resolve: {
         alias: {
