@@ -1,0 +1,55 @@
+{
+  "sectionTitle": "Choose your plan",
+  "sectionSubtitle": "All plans include secure tokenization with Recurly. Pick the tier that matches your team—upgrade or downgrade anytime.",
+  "ctaLabel": "Continue to checkout",
+  "pageTitle": "Choose your plan",
+  "pageDescription": "Pick a subscription tier, then continue to secure checkout.",
+  "plans": [
+    {
+      "id": "starter",
+      "name": "Starter",
+      "description": "Solo builders and side projects getting started with content.",
+      "price": "$9",
+      "period": "/month",
+      "badge": "",
+      "featured": false,
+      "features": [
+        "1 editor seat",
+        "Up to 3 collections",
+        "Community support",
+        "Standard preview"
+      ]
+    },
+    {
+      "id": "pro",
+      "name": "Pro",
+      "description": "Growing teams that need collaboration and staging workflows.",
+      "price": "$29",
+      "period": "/month",
+      "badge": "Most popular",
+      "featured": true,
+      "features": [
+        "Up to 10 editor seats",
+        "Unlimited collections",
+        "Git-backed drafts & branching",
+        "Priority email support",
+        "Custom preview domains"
+      ]
+    },
+    {
+      "id": "enterprise",
+      "name": "Enterprise",
+      "description": "Compliance, SSO, and dedicated support for large orgs.",
+      "price": "$99",
+      "period": "/month",
+      "badge": "",
+      "featured": false,
+      "features": [
+        "Unlimited seats & SSO",
+        "SLA & audit logs",
+        "Dedicated success manager",
+        "Custom contracts & invoicing"
+      ]
+    }
+  ]
+}

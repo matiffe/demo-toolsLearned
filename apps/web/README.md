@@ -1,24 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/create-next-app).
+This is a [Next.js](https://nextjs.org) app in a Turborepo monorepo, with **TinaCMS**, **Storybook** (`@repo/ui`), and **Recurly** on checkout.
+
+## Demo
+
+**Run the app (Tina + Next)** — from the monorepo root:
+
+```bash
+cd apps/web
+npm run dev
+```
+
+This runs `tinacms dev` with Next on [http://localhost:3000](http://localhost:3000). Use the admin at [http://localhost:3000/admin](http://localhost:3000/admin).
+
+**Click path for talks**
+
+| URL | What to show |
+| --- | --- |
+| `/` | Home intro (`content/home/intro.json`, collection **Home intro**) |
+| `/admin` | Tina sidebar, collections, preview |
+| `/plans` | **DEMO** collection — choose a plan (`content/demo/checkout-plans.json`), then continue to checkout |
+| `/checkout` | Payment form (**Recurly**); use `?plan=starter` (or `pro`, `enterprise`) after picking on `/plans` |
+| `/demo/blog/hello-world` | Sample **Posts** MDX |
+| `/demo/showcase` | Redirects to `/plans` (old bookmarks) |
+
+**Storybook** (PromoBanner and other UI) — from the monorepo root:
+
+```bash
+npm run storybook
+```
+
+Opens [http://localhost:6006](http://localhost:6006).
+
+**Environment variables**
+
+- **Tina (production / Vercel builds):** `NEXT_PUBLIC_TINA_CLIENT_ID`, `TINA_TOKEN`. For local dev, use **`npm run dev`** (not `next dev` alone): it sets `TINA_PUBLIC_IS_LOCAL=true`, and `tina/config.ts` skips those credentials so the admin does **not** open the Tina Cloud login screen.
+- **Recurly:** `NEXT_PUBLIC_RECURLY_PUBLIC_KEY` — use a [Recurly test public key](https://docs.recurly.com/docs/getting-started) so card tokenization works during the demo (replace the placeholder in code is not enough).
+
+Tina Cloud monorepos: in [app.tina.io](https://app.tina.io) set **Path to Tina** to `apps/web`. See comments in `tina/config.ts`.
+
+If `tinacms build` fails with **Datalayer server is busy on port 9000**, stop the other process (often a running `npm run dev`) or run the build with another port, for example: `npx tinacms build --local --skip-cloud-checks --datalayer-port 9010`.
 
 ## Getting Started
 
-First, run the development server:
+From **this directory** (`apps/web`):
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load Inter, a custom Google Font.
 
 ## Learn More
 

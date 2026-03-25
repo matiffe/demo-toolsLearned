@@ -1,0 +1,25 @@
+{
+  "badge": "Demo",
+  "title": "Edit content here, ship ideas there",
+  "intro": "This stack combines TinaCMS (collections + preview), Next.js, Storybook for UI, and Recurly on checkout—use the steps below as your click path.",
+  "steps": [
+    {
+      "title": "Open the CMS",
+      "body": "Create and edit posts as MDX and adjust the home intro JSON—all from the admin, no deploy required for content.",
+      "href": "/admin",
+      "linkLabel": "Open /admin"
+    },
+    {
+      "title": "Plans (DEMO collection)",
+      "body": "The DEMO collection (`content/demo/checkout-plans.json`) powers `/plans`—pick a tier, then continue to `/checkout` with Recurly.",
+      "href": "",
+      "linkLabel": ""
+    },
+    {
+      "title": "Sample blog post",
+      "body": "Posts live under content/posts as MDX—this one is a simple article route.",
+      "href": "",
+      "linkLabel": ""
+    }
+  ]
+}
