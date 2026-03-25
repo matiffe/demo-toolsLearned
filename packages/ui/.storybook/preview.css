@@ -2,3 +2,5 @@
 
 /* Scan UI package components so utility classes used in stories are generated */
 @source "../src/**/*.tsx";
+/* Web app routes (plans, checkout, etc.) used by apps/web Storybook stories */
+@source "../../../apps/web/app/**/*.tsx";

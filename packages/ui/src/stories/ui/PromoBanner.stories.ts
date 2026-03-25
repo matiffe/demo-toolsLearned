@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { PromoBanner } from "../PromoBanner";
+import { PromoBanner } from "../../PromoBanner";
 
 const meta: Meta<typeof PromoBanner> = {
   title: "UI/PromoBanner",

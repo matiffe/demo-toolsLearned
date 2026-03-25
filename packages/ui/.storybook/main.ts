@@ -2,9 +2,11 @@ import type { StorybookConfig } from "@storybook/react-vite";
 import tailwindcss from "@tailwindcss/vite";
 import { mergeConfig } from "vite";
 
-import { dirname } from "path";
+import { dirname, join } from "path";
 
-import { fileURLToPath } from "url"
+import { fileURLToPath } from "url";
+
+const storybookDir = dirname(fileURLToPath(import.meta.url));
 
 /**
 * This function is used to resolve the absolute path of a package.
@@ -16,7 +18,7 @@ function getAbsolutePath(value: string) {
 const config: StorybookConfig = {
   "stories": [
     "../src/**/*.mdx",
-    "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
+    "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   "addons": [
     getAbsolutePath('@chromatic-com/storybook'),
@@ -28,6 +30,12 @@ const config: StorybookConfig = {
   async viteFinal(config) {
     return mergeConfig(config, {
       plugins: [tailwindcss()],
+      resolve: {
+        alias: {
+          "next/link": join(storybookDir, "mocks/next-link.tsx"),
+          "next/navigation": join(storybookDir, "mocks/next-navigation.ts"),
+        },
+      },
     });
   },
 };
