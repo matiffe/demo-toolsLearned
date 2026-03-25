@@ -6,9 +6,7 @@ import { tinaField, useTina } from "tinacms/dist/react";
 import type { DemoQuery } from "../../tina/__generated__/types";
 
 type TinaDemoDoc = NonNullable<DemoQuery["demo"]>;
-import {
-  mapDemoToCheckoutPlansDoc,
-} from "../../lib/checkout-plans";
+import { mapDemoToCheckoutPlansDoc } from "../../lib/checkout-plans-map";
 import type { CheckoutPlansDoc } from "../checkout/types";
 import { resolvedPlansCtaLabel } from "../checkout/types";
 import { PlanPicker } from "./PlanPicker";
