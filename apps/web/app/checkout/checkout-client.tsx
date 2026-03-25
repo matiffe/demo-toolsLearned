@@ -7,20 +7,25 @@ import Link from "next/link";
 import type { CheckoutPlansDoc } from "./types";
 import CheckoutForm from "./checkout-form";
 
-export default function CheckoutClient({ plans }: { plans: CheckoutPlansDoc }) {
-  const searchParams = useSearchParams();
-  const planParam = searchParams?.get("plan")?.trim() ?? "";
+export function CheckoutView({
+  plans,
+  planParam,
+}: {
+  plans: CheckoutPlansDoc;
+  planParam: string;
+}) {
+  const trimmed = planParam.trim();
 
   const selectedPlan = useMemo(() => {
-    if (planParam) {
-      const match = plans.plans.find((p) => p.id === planParam);
+    if (trimmed) {
+      const match = plans.plans.find((p) => p.id === trimmed);
       if (match) return match;
     }
     return plans.plans.find((p) => p.featured) ?? plans.plans[0] ?? null;
-  }, [plans.plans, planParam]);
+  }, [plans.plans, trimmed]);
 
   const unknownPlan =
-    Boolean(planParam) && !plans.plans.some((p) => p.id === planParam);
+    Boolean(trimmed) && !plans.plans.some((p) => p.id === trimmed);
 
   if (!selectedPlan) {
     return (
@@ -73,4 +78,11 @@ export default function CheckoutClient({ plans }: { plans: CheckoutPlansDoc }) {
       </div>
     </div>
   );
+}
+
+export default function CheckoutClient({ plans }: { plans: CheckoutPlansDoc }) {
+  const searchParams = useSearchParams();
+  const planParam = searchParams?.get("plan")?.trim() ?? "";
+
+  return <CheckoutView plans={plans} planParam={planParam} />;
 }
