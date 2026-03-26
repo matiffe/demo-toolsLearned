@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import type { CheckoutPlansDoc } from "../../../../../apps/web/app/checkout/types";
 import PlansClient from "../../../../../apps/web/app/plans/plans-client";
@@ -11,6 +11,8 @@ const plansDoc = fixture as CheckoutPlansDoc;
 
 const featuredId =
   plansDoc.plans.find((p) => p.featured)?.id ?? plansDoc.plans[0]?.id ?? "";
+
+const planIdOptions = plansDoc.plans.map((p) => p.id);
 
 const meta = {
   title: "Web/Plans",
@@ -27,40 +29,97 @@ const meta = {
 
 export default meta;
 
-type Story = StoryObj;
+type PlansFullPageStory = StoryObj<{ plans: CheckoutPlansDoc }>;
 
-export const FullPage: Story = {
+export const FullPage: PlansFullPageStory = {
   name: "Full page (static JSON)",
-  render: () => <PlansClient plans={plansDoc} />,
+  args: {
+    plans: plansDoc,
+  },
+  argTypes: {
+    plans: {
+      control: "object",
+    },
+  },
+  render: (args) => <PlansClient plans={args.plans} />,
 };
 
-function PlanPickerCanvas({ initialId }: { initialId: string }) {
+type PlanPickerStoryArgs = {
+  doc: CheckoutPlansDoc;
+  initialId: string;
+  editable: boolean;
+};
+
+function PlanPickerWithState({
+  doc,
+  initialId,
+  editable,
+}: PlanPickerStoryArgs) {
   const [selectedId, setSelectedId] = useState(initialId);
+  return (
+    <PlanPicker
+      doc={doc}
+      selectedId={selectedId}
+      onSelect={setSelectedId}
+      editable={editable}
+    />
+  );
+}
+
+function PlanPickerStorybook(args: PlanPickerStoryArgs) {
   return (
     <div className="min-h-[480px] bg-linear-to-b from-slate-100 to-slate-50 py-12 px-4">
       <div className="mx-auto max-w-6xl">
-        <PlanPicker
-          doc={plansDoc}
-          selectedId={selectedId}
-          onSelect={setSelectedId}
-          editable={false}
-        />
+        <PlanPickerWithState key={args.initialId} {...args} />
       </div>
     </div>
   );
 }
 
-export const PlanPickerStory: Story = {
+type PlanPickerStory = StoryObj<PlanPickerStoryArgs>;
+
+const planPickerArgTypes = {
+  doc: {
+    control: "object" as const,
+  },
+  initialId: {
+    control: "select" as const,
+    options: planIdOptions,
+  },
+  editable: {
+    control: "boolean" as const,
+  },
+};
+
+const defaultPickerArgs: PlanPickerStoryArgs = {
+  doc: plansDoc,
+  initialId: featuredId,
+  editable: false,
+};
+
+export const PlanPickerStory: PlanPickerStory = {
   name: "Plan picker (featured selected)",
-  render: () => <PlanPickerCanvas initialId={featuredId} />,
+  args: defaultPickerArgs,
+  argTypes: planPickerArgTypes,
+  render: (args) => <PlanPickerStorybook {...args} />,
 };
 
-export const StarterSelected: Story = {
+export const StarterSelected: PlanPickerStory = {
   name: "Plan picker (starter selected)",
-  render: () => <PlanPickerCanvas initialId="starter" />,
+  args: {
+    ...defaultPickerArgs,
+    initialId: "starter",
+  },
+  argTypes: planPickerArgTypes,
+  render: (args) => <PlanPickerStorybook {...args} />,
 };
 
-export const EnterpriseSelected: Story = {
+export const EnterpriseSelected: PlanPickerStory = {
   name: "Plan picker (enterprise selected)",
-  render: () => <PlanPickerCanvas initialId="enterprise" />,
+  args: {
+    ...defaultPickerArgs,
+    initialId: "enterprise",
+  },
+  argTypes: planPickerArgTypes,
+  render: (args) => <PlanPickerStorybook {...args} />,
 };

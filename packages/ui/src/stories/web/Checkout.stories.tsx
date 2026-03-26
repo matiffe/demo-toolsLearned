@@ -16,8 +16,28 @@ const emptyPlansDoc: CheckoutPlansDoc = {
   plans: [],
 };
 
+const planParamOptions = [
+  ...plansDoc.plans.map((p) => p.id),
+  "",
+  "not-a-real-plan",
+];
+
 const meta = {
+  component: CheckoutView,
   title: "Web/Checkout",
+  args: {
+    plans: plansDoc,
+    planParam: "pro",
+  },
+  argTypes: {
+    planParam: {
+      control: "select",
+      options: planParamOptions,
+    },
+    plans: {
+      control: "object",
+    },
+  },
   parameters: {
     layout: "fullscreen" as const,
     docs: {
@@ -27,28 +47,34 @@ const meta = {
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<typeof CheckoutView>;
 
 export default meta;
 
-type Story = StoryObj;
+type Story = StoryObj<typeof CheckoutView>;
 
 export const ProPlan: Story = {
   name: "Featured plan (Pro)",
-  render: () => <CheckoutView plans={plansDoc} planParam="pro" />,
 };
 
 export const StarterPlan: Story = {
   name: "Starter plan",
-  render: () => <CheckoutView plans={plansDoc} planParam="starter" />,
+  args: {
+    planParam: "starter",
+  },
 };
 
 export const UnknownPlanInUrl: Story = {
   name: "Unknown plan in URL",
-  render: () => <CheckoutView plans={plansDoc} planParam="not-a-real-plan" />,
+  args: {
+    planParam: "not-a-real-plan",
+  },
 };
 
 export const EmptyPlans: Story = {
   name: "No plans configured",
-  render: () => <CheckoutView plans={emptyPlansDoc} planParam="" />,
+  args: {
+    plans: emptyPlansDoc,
+    planParam: "",
+  },
 };
