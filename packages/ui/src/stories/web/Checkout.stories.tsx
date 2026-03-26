@@ -1,57 +1,63 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
-import type { CheckoutPlansDoc } from "../../../../../apps/web/app/checkout/types";
 import { CheckoutView } from "../../../../../apps/web/app/checkout/checkout-client";
 
-import fixture from "../../../../../apps/web/content/demo/checkout-plans.json";
+import { friendlyPlansArgTypes } from "./plans-doc-story-arg-types";
+import {
+  buildPlansDocFromFriendlyArgs,
+  friendlyDefaultsFromFixture,
+  tierIds,
+} from "./plans-doc-story-builders";
 
-const plansDoc = fixture as CheckoutPlansDoc;
-
-const emptyPlansDoc: CheckoutPlansDoc = {
-  sectionTitle: "",
-  sectionSubtitle: "",
-  ctaLabel: null,
-  pageTitle: null,
-  pageDescription: null,
-  plans: [],
+type CheckoutStoryArgs = ReturnType<typeof friendlyDefaultsFromFixture> & {
+  planParam: string;
+  noPlans: boolean;
 };
 
-const planParamOptions = [
-  ...plansDoc.plans.map((p) => p.id),
-  "",
-  "not-a-real-plan",
-];
+const planParamOptions = [...tierIds, "", "not-a-real-plan"];
 
 const meta = {
-  component: CheckoutView,
   title: "Web/Checkout",
   args: {
-    plans: plansDoc,
+    ...friendlyDefaultsFromFixture(),
     planParam: "pro",
+    noPlans: false,
   },
   argTypes: {
+    ...friendlyPlansArgTypes,
     planParam: {
+      name: "Plan in URL",
       control: "select",
       options: planParamOptions,
+      table: { category: "Checkout" },
     },
-    plans: {
-      control: "object",
+    noPlans: {
+      name: "No plans (empty state)",
+      control: "boolean",
+      table: { category: "Checkout" },
     },
   },
+  render: (args: CheckoutStoryArgs) => (
+    <CheckoutView
+      plans={buildPlansDocFromFriendlyArgs(args)}
+      planParam={args.planParam}
+    />
+  ),
   parameters: {
     layout: "fullscreen" as const,
     docs: {
       description: {
         component:
-          "Checkout shell and payment form (`CheckoutView`), using the same demo plans JSON as production.",
+          "Checkout shell and payment form (`CheckoutView`). Use the controls to tweak copy and pricing like the Button example—no raw JSON.",
       },
     },
   },
-} satisfies Meta<typeof CheckoutView>;
+} satisfies Meta<CheckoutStoryArgs>;
 
 export default meta;
 
-type Story = StoryObj<typeof CheckoutView>;
+type Story = StoryObj<CheckoutStoryArgs>;
 
 export const ProPlan: Story = {
   name: "Featured plan (Pro)",
@@ -74,7 +80,7 @@ export const UnknownPlanInUrl: Story = {
 export const EmptyPlans: Story = {
   name: "No plans configured",
   args: {
-    plans: emptyPlansDoc,
+    noPlans: true,
     planParam: "",
   },
 };
